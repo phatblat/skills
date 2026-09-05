@@ -1,5 +1,5 @@
 {
-  "name": "phatblat-skills",
+  "name": "@phatblat/skills",
   "version": "0.0.0-development",
   "description": "Agent skills for changelogs, semantic versioning, and authoring portable agent skills.",
   "license": "MIT",
