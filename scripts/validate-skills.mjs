@@ -11,6 +11,11 @@ const ALLOWED_KEYS = new Set([
   'metadata',
   'allowed-tools',
 ]);
+// Claude Code reads this key to keep a skill user-invoked; every other harness
+// ignores it. The one deliberate deviation from the Agent Skills spec in this
+// repo (docs/decisions/2026-09-05-consolidate-skill-repos.md), so it is
+// allowed by name, not by loosening the unknown-key check.
+const HARNESS_KEYS = new Set(['disable-model-invocation']);
 
 let hasErrors = false;
 
@@ -52,7 +57,7 @@ for (const dir of dirs) {
   }
 
   for (const key of Object.keys(frontmatter)) {
-    if (!ALLOWED_KEYS.has(key)) {
+    if (!ALLOWED_KEYS.has(key) && !HARNESS_KEYS.has(key)) {
       fail(file, `unknown frontmatter key: ${key}`);
     }
   }
@@ -118,6 +123,13 @@ for (const dir of dirs) {
     typeof frontmatter['allowed-tools'] !== 'string'
   ) {
     fail(file, 'allowed-tools must be a string');
+  }
+
+  if (
+    frontmatter['disable-model-invocation'] !== undefined &&
+    typeof frontmatter['disable-model-invocation'] !== 'boolean'
+  ) {
+    fail(file, 'disable-model-invocation must be a boolean');
   }
 }
 
