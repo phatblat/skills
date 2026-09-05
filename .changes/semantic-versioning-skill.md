@@ -1,0 +1,1 @@
+- Added: a `semantic-versioning` skill with a stdlib-only checker for validating, comparing, sorting, and bumping Semantic Versioning 2.0.0 versions.

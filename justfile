@@ -18,31 +18,43 @@ _default:
 deps:
     mise install
     {{ mise }} bun install
+    {{ mise }} uv sync
 
 # Fix and format markdown, config, and the justfile
 [group('configuration')]
 format:
     -{{ mise }} markdownlint-cli2 --fix "**/*.md"
     {{ mise }} prettier --write .
+    {{ mise }} uv run ruff format .
     mise fmt
     just --fmt
 
 # Remove installed dependencies and caches
 [group('configuration')]
 clean:
-    rm -rf node_modules
+    rm -rf node_modules .venv .pytest_cache .mypy_cache .ruff_cache
+    just clean-pycache
+
+# Remove __pycache__ directories under skills/ and tests/
+[group('configuration')]
+[script]
+clean-pycache:
+    find skills tests -type d -name __pycache__ -prune -exec rm -rf {} +
 
 # Report tools and dependencies with newer versions available
 [group('configuration')]
 outdated:
     -mise outdated --local --bump
     -bun outdated
+    -{{ mise }} uv lock --upgrade --dry-run
 
 # Upgrade pinned tools and dependencies to their latest versions
 [group('configuration')]
 upgrade:
     mise upgrade --local --bump --yes
     bun update --latest
+    {{ mise }} uv lock --upgrade
+    {{ mise }} uv sync
 
 #
 # install group recipes
@@ -90,9 +102,9 @@ unlink:
 [group('checks')]
 format-check:
     {{ mise }} prettier --check .
+    {{ mise }} uv run ruff format --check .
     mise fmt --check
     just --fmt --check
-
 # Lint markdown structure
 [group('checks')]
 lint:
@@ -107,6 +119,21 @@ lint-changes:
 [group('checks')]
 lint-skills:
     bun scripts/validate-skills.mjs
+
+# Run the SemVer checker (e.g. `just run compare 1.0.0 1.0.0-rc.1`)
+[group('build')]
+run *args:
+    {{ mise }} uv run skills/semantic-versioning/scripts/semver.py {{ args }}
+
+# Lint Python with ruff
+[group('checks')]
+lint-python:
+    {{ mise }} uv run ruff check .
+
+# Type-check with mypy
+[group('checks')]
+typecheck:
+    {{ mise }} uv run mypy
 
 # Lint commit messages in a range (defaults to auto-detected base..HEAD)
 [group('checks')]
@@ -125,7 +152,7 @@ commitlint from="" to="HEAD":
 
 # Run every gate
 [group('checks')]
-check: format-check lint lint-changes lint-skills test
+check: format-check lint lint-changes lint-skills lint-python typecheck test
 
 #
 # tests group recipes
@@ -133,9 +160,14 @@ check: format-check lint lint-changes lint-skills test
 
 # Run every test
 [group('tests')]
-test: test-links
+test: test-python test-links
 
 # Check markdown files for broken links
 [group('tests')]
 test-links:
     bun x linkinator "*.md" ".changes/*.md" --markdown
+
+# Run the Python test suite
+[group('tests')]
+test-python:
+    {{ mise }} uv run pytest

@@ -1,0 +1,42 @@
+[project]
+name = "phatblat-skills"
+version = "0.0.0" # Unused: the repo's version is the git tag cut by semantic-release.
+description = "Semantic Versioning 2.0.0 agent skill and version checker"
+authors = [{ name = "Ben Chatelain", email = "ben@octop.ad" }]
+requires-python = ">=3.9"
+dependencies = []
+
+[tool.uv]
+# mise.toml pins the interpreter. Without `only-system`, uv downloads and binds
+# .venv to its own managed Python and the mise pin becomes decorative.
+python-preference = "only-system"
+
+[tool.ruff]
+line-length = 100
+src = ["skills/semantic-versioning/scripts", "tests"]
+# The checker must run under stock macOS python3 (3.9.6), so pyupgrade rules
+# must not rewrite it into 3.10+-only syntax.
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+# The pinned mypy no longer supports checking a 3.9 target (minimum is 3.10);
+# the actual portability floor for the shipped script is `requires-python`
+# above and `[tool.ruff] target-version`, which mypy's setting can't relax.
+python_version = "3.10"
+strict = true
+files = ["skills/semantic-versioning/scripts", "tests"]
+mypy_path = "skills/semantic-versioning/scripts"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["skills/semantic-versioning/scripts"]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.19.1",
+    "pytest>=8.4.2",
+    "ruff>=0.16.6",
+]
