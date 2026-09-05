@@ -105,6 +105,7 @@ format-check:
     {{ mise }} uv run ruff format --check .
     mise fmt --check
     just --fmt --check
+
 # Lint markdown structure
 [group('checks')]
 lint:
@@ -119,6 +120,15 @@ lint-changes:
 [group('checks')]
 lint-skills:
     bun scripts/validate-skills.mjs
+
+# Validate the portable skills against the Agent Skills reference validator.
+# setup-phatblat-skills is excluded: it carries Claude Code's
+# `disable-model-invocation`, which skills-ref rejects as an unknown field.
+[group('checks')]
+lint-skills-ref:
+    uvx --from skills-ref agentskills validate skills/authoring-skills
+    uvx --from skills-ref agentskills validate skills/recording-changes
+    uvx --from skills-ref agentskills validate skills/semantic-versioning
 
 # Run the SemVer checker (e.g. `just run compare 1.0.0 1.0.0-rc.1`)
 [group('build')]
@@ -152,7 +162,7 @@ commitlint from="" to="HEAD":
 
 # Run every gate
 [group('checks')]
-check: format-check lint lint-changes lint-skills lint-python typecheck test
+check: format-check lint lint-changes lint-skills lint-skills-ref lint-python typecheck test
 
 #
 # tests group recipes

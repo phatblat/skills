@@ -1,0 +1,1 @@
+- Added: an `authoring-skills` skill for authoring and auditing `SKILL.md` packages against the Agent Skills specification, portable across every harness this project targets.
