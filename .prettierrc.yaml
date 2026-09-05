@@ -1,0 +1,12 @@
+# Prettier owns markdown wrapping; markdownlint's MD013 is off to match.
+printWidth: 80
+proseWrap: always
+tabWidth: 2
+useTabs: false
+endOfLine: lf
+semi: true
+singleQuote: true
+trailingComma: all
+# Fenced examples in this repo are illustrative and include deliberate
+# counter-examples; prettier must not reformat code block contents.
+embeddedLanguageFormatting: 'off'

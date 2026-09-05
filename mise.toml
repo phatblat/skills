@@ -1,0 +1,13 @@
+[tools]
+bun = "1.4.1"
+just = "1.58.0"
+"npm:markdownlint-cli2" = "0.23.2"
+"npm:prettier" = "3.9.6"
+
+# `mise deps` runs `bun install` when package.json or bun.lock changes.
+[deps.bun]
+
+[settings]
+# `[deps.*]` is experimental. Declaring it here means the project works without
+# the developer's global mise config enabling it.
+experimental = true

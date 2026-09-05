@@ -1,0 +1,22 @@
+config:
+  default: true
+  # Line length is off: prettier owns wrapping (proseWrap always, printWidth
+  # 80) and cannot wrap the long compare URLs in reference-link definitions.
+  MD013: false
+  # A changelog repeats "### Added" once per version; only duplicates under the
+  # same version heading are real duplicates.
+  MD024:
+    siblings_only: true
+  # A SKILL.md or a change fragment starts with frontmatter or a list item.
+  MD041: false
+  # Keep a Changelog version headings (`## [1.2.0]`) are shortcut reference
+  # links; MD052 ignores that form by default, which would let a version
+  # heading with no matching `[x.y.z]:` definition pass silently.
+  MD052:
+    shortcut_syntax: true
+ignores:
+  - node_modules/**
+  - .venv/**
+  - LICENSE.md
+  # A verbatim copy of an external document; not ours to reformat.
+  - skills/semantic-versioning/references/spec-v2.0.0.md

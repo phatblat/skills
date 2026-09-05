@@ -1,0 +1,21 @@
+{
+  "branches": ["main"],
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "releaseRules": [{ "type": "docs", "release": "patch" }]
+      }
+    ],
+    "./scripts/semantic-release-changes.mjs",
+    "@semantic-release/changelog",
+    "@semantic-release/github",
+    [
+      "@semantic-release/git",
+      {
+        "assets": ["CHANGELOG.md", ".changes"],
+        "message": "release: v${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ]
+  ]
+}

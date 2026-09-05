@@ -1,0 +1,7 @@
+node_modules/
+.venv/
+bun.lock
+uv.lock
+CHANGELOG.md
+# A verbatim copy of an external document; not ours to reformat.
+skills/semantic-versioning/references/spec-v2.0.0.md
