@@ -1,6 +1,9 @@
-# Prettier owns markdown wrapping; markdownlint's MD013 is off to match.
+# proseWrap is "preserve", not "always": a `.changes/*.md` release-note
+# fragment must be one unwrapped line per bullet (see .changes/README.md),
+# and prettier's "always" would hard-wrap it at printWidth. markdownlint's
+# MD013 is off to match.
 printWidth: 80
-proseWrap: always
+proseWrap: preserve
 tabWidth: 2
 useTabs: false
 endOfLine: lf

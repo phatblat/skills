@@ -1,0 +1,1 @@
+- Added: a `recording-changes` skill, guiding agents to read and update `CHANGELOG.md` under Keep a Changelog 2.0.0.
