@@ -48,3 +48,9 @@ jobs:
       - run: bun x semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # The check job already lints every hand-authored file; the only
+          # new content in semantic-release's commit is CHANGELOG.md, which
+          # @semantic-release/changelog generates from a template this repo
+          # doesn't control the formatting of. Gating that commit on the
+          # human-mistake-catching pre-commit hook would block every release.
+          HUSKY: '0'
