@@ -21,7 +21,7 @@ export async function generateNotes() {
   return CHANGE_TYPES.filter((type) => grouped.get(type).length > 0)
     .map(
       (type) =>
-        `### ${type}\n${grouped
+        `### ${type}\n\n${grouped
           .get(type)
           .map((entry) => `- ${entry}`)
           .join('\n')}`,

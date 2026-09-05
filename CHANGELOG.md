@@ -1,4 +1,5 @@
 ### Added
+
 - an `authoring-skills` skill for authoring and auditing `SKILL.md` packages against the Agent Skills specification, portable across every harness this project targets.
 - `phatblat-skills` ships as a Claude Code plugin and marketplace, and as a Codex plugin, alongside the existing `npx skills` install route.
 - a `recording-changes` skill, guiding agents to read and update `CHANGELOG.md` under Keep a Changelog 2.0.0.
