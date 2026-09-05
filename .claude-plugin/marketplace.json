@@ -1,0 +1,15 @@
+{
+  "$schema": "https://www.schemastore.org/claude-code-marketplace.json",
+  "name": "phatblat",
+  "description": "Ben Chatelain's agent skills, as Claude Code plugins.",
+  "owner": { "name": "Ben Chatelain", "url": "https://github.com/phatblat" },
+  "plugins": [
+    {
+      "name": "phatblat-skills",
+      "source": "./",
+      "description": "Agent skills for changelogs, semantic versioning, and authoring portable agent skills.",
+      "category": "engineering",
+      "keywords": ["changelog", "semver", "agent-skill"]
+    }
+  ]
+}

@@ -175,7 +175,10 @@ test: test-python test-links
 # Check markdown files for broken links
 [group('tests')]
 test-links:
-    bun x linkinator "*.md" ".changes/*.md" --markdown
+    # skills.sh is skipped: the badge and the repo's directory page both
+    # 404 until the CLI registers this repo with a real install (see the
+    # publish step in README.md); a static link check can't observe that.
+    bun x linkinator "*.md" ".changes/*.md" --markdown --skip 'skills\.sh'
 
 # Run the Python test suite
 [group('tests')]

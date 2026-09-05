@@ -1,0 +1,11 @@
+{
+  "name": "phatblat",
+  "interface": { "displayName": "phatblat skills" },
+  "plugins": [
+    {
+      "name": "phatblat-skills",
+      "source": { "source": "local", "path": "./" },
+      "category": "Productivity"
+    }
+  ]
+}

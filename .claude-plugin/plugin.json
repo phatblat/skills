@@ -1,0 +1,16 @@
+{
+  "$schema": "https://www.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "phatblat-skills",
+  "description": "Agent skills for changelogs, semantic versioning, and authoring portable agent skills.",
+  "author": { "name": "Ben Chatelain" },
+  "homepage": "https://github.com/phatblat/skills#readme",
+  "repository": "https://github.com/phatblat/skills",
+  "license": "MIT",
+  "keywords": [
+    "changelog",
+    "semver",
+    "versioning",
+    "agent-skill",
+    "documentation"
+  ]
+}
