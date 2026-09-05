@@ -18,9 +18,9 @@
 - Skills live at `skills/<name>/SKILL.md` with `name` equal to the directory
   name, and stay spec-clean: `name`, `description`, `license`, and nothing else.
   The single exception is `setup-phatblat-skills`'s `disable-model-invocation`
-  (DECISIONS.md 0001). Reach for
-  `skills/authoring-skills/references/spec-fields.md` before adding any
-  frontmatter key.
+  ([2026-09-05-consolidate-skill-repos](docs/decisions/2026-09-05-consolidate-skill-repos.md)).
+  Reach for `skills/authoring-skills/references/spec-fields.md` before adding
+  any frontmatter key.
 - A skill name names the activity, not the artifact: `recording-changes`, not
   `changelog`. The user-invoked setup command is the exception and is named for
   what a human types.
@@ -33,6 +33,6 @@
 - Python tests live in `tests/`, not inside the skill, so the skill payload
   stays copy-clean. Add a test with every behavior change.
 - `just check` must be green before pushing.
-- The operational rules for the docs artifacts (`DECISIONS.md`, `ROADMAP.md`,
+- The operational rules for the docs artifacts (`docs/decisions/`, `ROADMAP.md`,
   `.changes/`, commit events) are the conventional-docs skill's; read it before
   editing any of them.
