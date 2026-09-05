@@ -1,1 +1,0 @@
-- Added: `phatblat-skills` ships as a Claude Code plugin and marketplace, and as a Codex plugin, alongside the existing `npx skills` install route.

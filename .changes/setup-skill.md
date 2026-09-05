@@ -1,1 +1,0 @@
-- Added: a `setup-phatblat-skills` skill that records a repository's changelog policy and versioning scheme in its `AGENTS.md`.
