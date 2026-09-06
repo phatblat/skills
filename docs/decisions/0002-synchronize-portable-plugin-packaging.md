@@ -53,6 +53,6 @@ Codex marketplace entries declare installation and authentication policies expli
 - Release preparation changes four version-bearing files in lockstep and includes them in the semantic-release commit.
 - Versions embedded in external standards, dependency constraints, lockfiles, and historical changelog sections are not repository-version values and are not synchronized.
 - Claude Code, Cursor, Grok, Pi, Oh My Pi, Codex, and ChatGPT receive native explicit-only invocation metadata where supported.
-- OpenCode, Antigravity, Gemini CLI, and any other client without equivalent invocation control can only be guarded after selection; the repository does not claim otherwise.
+- Claude.ai, OpenCode, Antigravity, Gemini CLI, and any other client without equivalent invocation control can only be guarded after selection; the repository does not claim otherwise.
 - The shared skill body and bundled resources remain single-source and portable; no per-client copy of `SKILL.md` is introduced.
 - Each identified defect lands as its own implementation commit, with focused tests or validation where behavior changes.
