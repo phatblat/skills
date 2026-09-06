@@ -9,12 +9,7 @@
   "homepage": "https://github.com/phatblat/skills#readme",
   "repository": "https://github.com/phatblat/skills",
   "license": "MIT",
-  "keywords": [
-    "changelog",
-    "semver",
-    "versioning",
-    "agent-skill"
-  ],
+  "keywords": ["changelog", "semver", "versioning", "agent-skill"],
   "skills": "./skills/",
   "interface": {
     "displayName": "phatblat skills",

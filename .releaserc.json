@@ -28,6 +28,7 @@
           ".changes",
           "package.json",
           "pyproject.toml",
+          "uv.lock",
           ".claude-plugin/plugin.json",
           ".codex-plugin/plugin.json"
         ],

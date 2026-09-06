@@ -34,7 +34,7 @@ async function requireComponentPath(root, value, field, errors) {
   }
 }
 
-function projectVersion(pyproject, errors) {
+function projectValue(pyproject, key, errors) {
   let inProject = false;
   for (const line of pyproject.split('\n')) {
     if (line === '[project]') {
@@ -42,27 +42,57 @@ function projectVersion(pyproject, errors) {
       continue;
     }
     if (inProject && line.startsWith('[')) break;
-    const match = inProject && line.match(/^version\s*=\s*"([^"]+)"/);
+    const match =
+      inProject && line.match(new RegExp(`^${key}\\s*=\\s*"([^"]+)"`));
     if (match) return match[1];
   }
-  errors.push('pyproject.toml: missing [project] version');
+  errors.push(`pyproject.toml: missing [project] ${key}`);
+  return null;
+}
+
+function lockedProjectVersion(lockfile, projectName, errors) {
+  let inProjectPackage = false;
+  for (const line of lockfile.split('\n')) {
+    if (line === '[[package]]') {
+      inProjectPackage = false;
+      continue;
+    }
+    if (line === `name = "${projectName}"`) {
+      inProjectPackage = true;
+      continue;
+    }
+    const match = inProjectPackage && line.match(/^version\s*=\s*"([^"]+)"/);
+    if (match) return match[1];
+  }
+  errors.push(`uv.lock: missing ${projectName} package version`);
   return null;
 }
 
 export async function validatePlugins(root = process.cwd()) {
   const errors = [];
-  const [pkg, claude, claudeMarketplace, codex, codexMarketplace, pyproject] =
-    await Promise.all([
-      readJson(root, 'package.json', errors),
-      readJson(root, '.claude-plugin/plugin.json', errors),
-      readJson(root, '.claude-plugin/marketplace.json', errors),
-      readJson(root, '.codex-plugin/plugin.json', errors),
-      readJson(root, '.agents/plugins/marketplace.json', errors),
-      readFile(path.join(root, 'pyproject.toml'), 'utf8').catch((error) => {
-        errors.push(`pyproject.toml: ${error.message}`);
-        return '';
-      }),
-    ]);
+  const [
+    pkg,
+    claude,
+    claudeMarketplace,
+    codex,
+    codexMarketplace,
+    pyproject,
+    lockfile,
+  ] = await Promise.all([
+    readJson(root, 'package.json', errors),
+    readJson(root, '.claude-plugin/plugin.json', errors),
+    readJson(root, '.claude-plugin/marketplace.json', errors),
+    readJson(root, '.codex-plugin/plugin.json', errors),
+    readJson(root, '.agents/plugins/marketplace.json', errors),
+    readFile(path.join(root, 'pyproject.toml'), 'utf8').catch((error) => {
+      errors.push(`pyproject.toml: ${error.message}`);
+      return '';
+    }),
+    readFile(path.join(root, 'uv.lock'), 'utf8').catch((error) => {
+      errors.push(`uv.lock: ${error.message}`);
+      return '';
+    }),
+  ]);
 
   if (!pkg || !claude || !claudeMarketplace || !codex || !codexMarketplace) {
     return errors;
@@ -87,10 +117,18 @@ export async function validatePlugins(root = process.cwd()) {
     }
   }
 
-  const pythonVersion = projectVersion(pyproject, errors);
+  const pythonName = projectValue(pyproject, 'name', errors);
+  const pythonVersion = projectValue(pyproject, 'version', errors);
   if (pythonVersion && pythonVersion !== pkg.version) {
     errors.push(
       `pyproject.toml version must equal package.json version ${pkg.version}`,
+    );
+  }
+  const lockedVersion =
+    pythonName && lockedProjectVersion(lockfile, pythonName, errors);
+  if (lockedVersion && lockedVersion !== pkg.version) {
+    errors.push(
+      `uv.lock version must equal package.json version ${pkg.version}`,
     );
   }
 

@@ -170,7 +170,7 @@ commitlint from="" to="HEAD":
 
 # Run every gate
 [group('checks')]
-check: format-check lint lint-changes lint-plugins lint-skills lint-skills-ref lint-python typecheck test
+check: lint-plugins format-check lint lint-changes lint-skills lint-skills-ref lint-python typecheck test
 
 #
 # tests group recipes

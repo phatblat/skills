@@ -37,12 +37,16 @@ async function makeReleaseFixture() {
       '[project]\nname = "phatblat-skills"\nversion = "0.1.0"\n',
     ),
     writeFile(
+      path.join(root, 'uv.lock'),
+      'version = 1\n\n[[package]]\nname = "phatblat-skills"\nversion = "0.1.0"\nsource = { virtual = "." }\n',
+    ),
+    writeFile(
       path.join(root, '.claude-plugin/plugin.json'),
       `${JSON.stringify({ name: 'phatblat-skills' }, null, 2)}\n`,
     ),
     writeFile(
       path.join(root, '.codex-plugin/plugin.json'),
-      `${JSON.stringify({ name: 'phatblat-skills', version: '0.1.0' }, null, 2)}\n`,
+      '{\n  "name": "phatblat-skills",\n  "version": "0.1.0",\n  "keywords": ["changelog", "semver"]\n}\n',
     ),
     writeFile(
       path.join(root, '.changes/release.md'),
@@ -81,6 +85,12 @@ test('release preparation synchronizes every package version', async () => {
   expect(await readFile(path.join(root, 'pyproject.toml'), 'utf8')).toContain(
     'version = "0.2.0"',
   );
+  expect(await readFile(path.join(root, 'uv.lock'), 'utf8')).toContain(
+    'name = "phatblat-skills"\nversion = "0.2.0"',
+  );
+  expect(
+    await readFile(path.join(root, '.codex-plugin/plugin.json'), 'utf8'),
+  ).toContain('"keywords": ["changelog", "semver"]');
   expect(await Bun.file(path.join(root, '.changes/release.md')).exists()).toBe(
     false,
   );

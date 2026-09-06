@@ -32,6 +32,10 @@ async function makePluginFixture() {
     path.join(root, 'pyproject.toml'),
     '[project]\nname = "example"\nversion = "0.1.0"\n',
   );
+  await writeFile(
+    path.join(root, 'uv.lock'),
+    'version = 1\n\n[[package]]\nname = "example"\nversion = "0.1.0"\nsource = { virtual = "." }\n',
+  );
   await writeJson(root, 'package.json', { name: 'example', version: '0.1.0' });
   await writeJson(root, '.claude-plugin/plugin.json', {
     name: 'example',
@@ -88,6 +92,21 @@ test('rejects a plugin version that differs from package.json', async () => {
 
   expect(result.exitCode).toBe(1);
   expect(result.stderr.toString()).toContain('version must equal package.json');
+});
+
+test('rejects a locked project version that differs from package.json', async () => {
+  const root = await makePluginFixture();
+  await writeFile(
+    path.join(root, 'uv.lock'),
+    'version = 1\n\n[[package]]\nname = "example"\nversion = "0.0.0"\nsource = { virtual = "." }\n',
+  );
+
+  const result = validate(root);
+
+  expect(result.exitCode).toBe(1);
+  expect(result.stderr.toString()).toContain(
+    'uv.lock version must equal package.json',
+  );
 });
 
 test('rejects implicit Codex marketplace policy', async () => {
