@@ -1,0 +1,1 @@
+- Fixed: the first automated release continues from the recorded `0.1.0` instead of jumping to `1.0.0`.
