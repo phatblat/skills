@@ -1,1 +1,0 @@
-- Fixed: the Semantic Versioning checker now runs from installed skill locations instead of assuming the source repository layout.

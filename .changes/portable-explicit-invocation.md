@@ -1,1 +1,0 @@
-- Fixed: setup remains explicit-only on clients with invocation controls and stops safely on clients without them.

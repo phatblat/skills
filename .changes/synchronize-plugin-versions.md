@@ -1,1 +1,0 @@
-- Fixed: plugin and package versions now stay synchronized from one release value.

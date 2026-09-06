@@ -1,1 +1,0 @@
-- Fixed: plugin validation now checks every component path in both plugin manifests, including paths written without a `./` prefix.

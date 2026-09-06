@@ -1,1 +1,0 @@
-- Fixed: the Codex marketplace now declares installation and authentication policies explicitly.

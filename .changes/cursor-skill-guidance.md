@@ -1,1 +1,0 @@
-- Fixed: skill authoring guidance now reflects Cursor's native Agent Skills support.

@@ -1,6 +1,6 @@
 {
   "name": "phatblat-skills",
-  "version": "0.1.0",
+  "version": "1.0.2",
   "description": "Agent skills for changelogs, semantic versioning, and authoring portable agent skills.",
   "author": {
     "name": "Ben Chatelain",
