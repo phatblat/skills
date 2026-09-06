@@ -43,6 +43,23 @@ _which_ artifact(s) a portable capability needs to ship as.
    parser may reject them or simply never read them. Prefer the spec's
    `metadata` map for anything a specific harness needs.
 
+## Explicit-only invocation
+
+Explicit-only invocation is a client extension, not part of the Agent Skills
+specification:
+
+| Clients                                      | Metadata                                                          | Fallback needed? |
+| -------------------------------------------- | ----------------------------------------------------------------- | ---------------- |
+| Claude Code, Cursor, Grok, Pi, Oh My Pi      | `disable-model-invocation: true`                                  | No               |
+| Codex and ChatGPT                            | `policy.allow_implicit_invocation: false` in `agents/openai.yaml` | No               |
+| Claude.ai, OpenCode, Antigravity, Gemini CLI | No equivalent control                                             | Yes              |
+
+For an explicit-only skill, ship every supported metadata form from the same
+skill directory. On unsupported clients, make the description say that the
+skill runs only when explicitly named and make the first body step stop unless
+the user did so. This prevents mutation after accidental selection but cannot
+prevent the client from loading the skill; document that distinction.
+
 ## Other clients
 
 The client list at <https://agentskills.io/clients> grows regularly (Claude

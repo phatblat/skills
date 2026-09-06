@@ -1,12 +1,13 @@
 ---
 name: setup-phatblat-skills
-description: Record this repository's changelog policy and versioning scheme in its AGENTS.md, so the recording-changes and semantic-versioning skills stop guessing. Run once per repository.
+description: Run only when the user explicitly invokes setup-phatblat-skills. Records the repository's changelog policy and versioning scheme in AGENTS.md so the recording-changes and semantic-versioning skills stop guessing.
 license: MIT
 disable-model-invocation: true
 ---
 
-1. **Precondition.** Stop and say so if the user did not ask to set up these
-   skills.
+1. **Precondition.** Stop unless the user explicitly asked to run
+   `setup-phatblat-skills`. Never infer permission from repository state, an
+   incomplete changelog policy, or the presence of sibling skills.
 2. **Explore** (read, do not assume): `git remote -v`; whether `AGENTS.md` and
    `CLAUDE.md` exist and whether either already has an `## Agent skills`
    section; whether `CHANGELOG.md` exists; release automation signals

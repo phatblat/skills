@@ -9,12 +9,19 @@ Grok, Pi, and Oh My Pi.
 
 ## Skills
 
-| Skill                   | Description                                                                      | Invocation    |
-| ----------------------- | -------------------------------------------------------------------------------- | ------------- |
-| `recording-changes`     | Read and update `CHANGELOG.md` under Keep a Changelog 2.0.0.                     | Model-invoked |
-| `semantic-versioning`   | Validate, compare, sort, and bump Semantic Versioning 2.0.0 versions.            | Model-invoked |
-| `authoring-skills`      | Author or audit a `SKILL.md` package against the Agent Skills specification.     | Model-invoked |
-| `setup-phatblat-skills` | Record a repository's changelog policy and versioning scheme in its `AGENTS.md`. | User-invoked  |
+| Skill                   | Description                                                                      | Invocation                    |
+| ----------------------- | -------------------------------------------------------------------------------- | ----------------------------- |
+| `recording-changes`     | Read and update `CHANGELOG.md` under Keep a Changelog 2.0.0.                     | Model-invoked                 |
+| `semantic-versioning`   | Validate, compare, sort, and bump Semantic Versioning 2.0.0 versions.            | Model-invoked                 |
+| `authoring-skills`      | Author or audit a `SKILL.md` package against the Agent Skills specification.     | Model-invoked                 |
+| `setup-phatblat-skills` | Record a repository's changelog policy and versioning scheme in its `AGENTS.md`. | Explicit-only where supported |
+
+`setup-phatblat-skills` uses native explicit-only metadata for Claude Code,
+Cursor, Grok, Pi, Oh My Pi, Codex, and ChatGPT. Claude.ai, OpenCode,
+Antigravity, and Gemini CLI expose no equivalent control, so the skill uses a
+non-triggering description and stops before doing work unless the user named
+it. See the
+[compatibility matrix](skills/authoring-skills/references/compatibility-matrix.md#explicit-only-invocation).
 
 ## Install
 
