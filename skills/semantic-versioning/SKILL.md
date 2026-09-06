@@ -32,30 +32,35 @@ element (major, minor, patch) increases numerically with no leading zeroes.
 
 ## Run the checker instead of reasoning
 
+The checker is already bundled with this skill at `scripts/semver.py`. Resolve
+`<skill-directory>` from the directory containing this activated `SKILL.md`;
+never assume the consuming repository has its own `skills/` tree or run the
+script relative to the consuming repository's working directory.
+
 ```bash
-skills/semantic-versioning/scripts/semver.py validate 1.2.3 v1.2.3
+python3 "<skill-directory>/scripts/semver.py" validate 1.2.3 v1.2.3
 # 1.2.3: ok
 # v1.2.3: invalid — leading "v" is a tag prefix, not part of the version
 
-skills/semantic-versioning/scripts/semver.py compare 1.0.0-alpha 1.0.0
+python3 "<skill-directory>/scripts/semver.py" compare 1.0.0-alpha 1.0.0
 # -1
 
-skills/semantic-versioning/scripts/semver.py sort 1.0.0 1.0.0-rc.1 1.0.0-alpha
+python3 "<skill-directory>/scripts/semver.py" sort 1.0.0 1.0.0-rc.1 1.0.0-alpha
 # 1.0.0-alpha
 # 1.0.0-rc.1
 # 1.0.0
 
-skills/semantic-versioning/scripts/semver.py bump minor 1.2.3-alpha
+python3 "<skill-directory>/scripts/semver.py" bump minor 1.2.3-alpha
 # 1.3.0
 
-skills/semantic-versioning/scripts/semver.py parse 1.0.0-beta+exp.sha.5114f85
+python3 "<skill-directory>/scripts/semver.py" parse 1.0.0-beta+exp.sha.5114f85
 # {"major":1,"minor":0,"patch":0,"prerelease":["beta"],"build":["exp","sha","5114f85"]}
 ```
 
-Inside this repo, run the same commands through `just run <args>` so the
-pinned interpreter is used. The script itself is stdlib-only and needs
-nothing beyond a system `python3`, so it also runs standalone wherever the
-skill directory is copied.
+Inside this source repo, run the same commands through `just run <args>` so the
+pinned interpreter is used. The script itself is stdlib-only and needs nothing
+beyond a system `python3`, so it also runs standalone wherever the skill
+directory is installed or copied.
 
 | Command                            | Behavior                                                                                             | Exit                           |
 | ---------------------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------ |
