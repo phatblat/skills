@@ -1,5 +1,6 @@
 import { readFile, rm } from 'node:fs/promises';
 import { CHANGE_LINE_RE, CHANGE_TYPES, fragmentFiles } from './changes-lib.mjs';
+import { syncVersions } from './sync-versions.mjs';
 
 /**
  * semantic-release `generateNotes` step: fold every `.changes/*.md` fragment
@@ -35,7 +36,8 @@ export async function generateNotes() {
  * deletions are staged in the release commit — keep this plugin earlier than
  * `@semantic-release/git` in `.releaserc.json`'s `plugins` array.
  */
-export async function prepare() {
-  const files = await fragmentFiles();
+export async function prepare(_pluginConfig, { cwd, nextRelease }) {
+  await syncVersions({ root: cwd, version: nextRelease.version });
+  const files = await fragmentFiles(cwd);
   await Promise.all(files.map((file) => rm(file)));
 }

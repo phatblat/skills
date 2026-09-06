@@ -13,7 +13,14 @@
     [
       "@semantic-release/git",
       {
-        "assets": ["CHANGELOG.md", ".changes"],
+        "assets": [
+          "CHANGELOG.md",
+          ".changes",
+          "package.json",
+          "pyproject.toml",
+          ".claude-plugin/plugin.json",
+          ".codex-plugin/plugin.json"
+        ],
         "message": "release: v${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
     ]

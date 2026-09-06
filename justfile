@@ -135,6 +135,10 @@ lint-skills-ref:
 run *args:
     {{ mise }} uv run skills/semantic-versioning/scripts/semver.py {{ args }}
 
+# Synchronize every package manifest with package.json's version
+[group('build')]
+sync-versions:
+    bun scripts/sync-versions.mjs
 # Lint Python with ruff
 [group('checks')]
 lint-python:
@@ -170,7 +174,7 @@ check: format-check lint lint-changes lint-skills lint-skills-ref lint-python ty
 
 # Run every test
 [group('tests')]
-test: test-python test-links
+test: test-js test-python test-links
 
 # Check markdown files for broken links
 [group('tests')]
@@ -179,6 +183,11 @@ test-links:
     # 404 until the CLI registers this repo with a real install (see the
     # publish step in README.md); a static link check can't observe that.
     bun x linkinator "*.md" ".changes/*.md" --markdown --skip 'skills\.sh'
+
+# Run the JavaScript test suite
+[group('tests')]
+test-js:
+    mise exec -- bun test tests/*.test.mjs
 
 # Run the Python test suite
 [group('tests')]

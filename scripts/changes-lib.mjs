@@ -15,8 +15,9 @@ export const CHANGE_LINE_RE = new RegExp(
 );
 
 /** List change fragment files, excluding the directory's own README. */
-export async function fragmentFiles() {
-  const entries = await readdir(CHANGES_DIR, { withFileTypes: true }).catch(
+export async function fragmentFiles(root = '.') {
+  const changesDir = path.join(root, CHANGES_DIR);
+  const entries = await readdir(changesDir, { withFileTypes: true }).catch(
     () => [],
   );
   return entries
@@ -26,6 +27,6 @@ export async function fragmentFiles() {
         entry.name.endsWith('.md') &&
         entry.name !== 'README.md',
     )
-    .map((entry) => path.join(CHANGES_DIR, entry.name))
+    .map((entry) => path.join(changesDir, entry.name))
     .sort();
 }

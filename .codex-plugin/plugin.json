@@ -1,12 +1,20 @@
 {
   "name": "phatblat-skills",
-  "version": "0.0.0-development",
+  "version": "0.1.0",
   "description": "Agent skills for changelogs, semantic versioning, and authoring portable agent skills.",
-  "author": { "name": "Ben Chatelain", "url": "https://github.com/phatblat" },
+  "author": {
+    "name": "Ben Chatelain",
+    "url": "https://github.com/phatblat"
+  },
   "homepage": "https://github.com/phatblat/skills#readme",
   "repository": "https://github.com/phatblat/skills",
   "license": "MIT",
-  "keywords": ["changelog", "semver", "versioning", "agent-skill"],
+  "keywords": [
+    "changelog",
+    "semver",
+    "versioning",
+    "agent-skill"
+  ],
   "skills": "./skills/",
   "interface": {
     "displayName": "phatblat skills",

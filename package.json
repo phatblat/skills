@@ -1,6 +1,6 @@
 {
   "name": "@phatblat/skills",
-  "version": "0.0.0-development",
+  "version": "0.1.0",
   "description": "Agent skills for changelogs, semantic versioning, and authoring portable agent skills.",
   "license": "MIT",
   "author": "Ben Chatelain",

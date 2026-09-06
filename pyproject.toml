@@ -1,6 +1,6 @@
 [project]
 name = "phatblat-skills"
-version = "0.0.0" # Unused: the repo's version is the git tag cut by semantic-release.
+version = "0.1.0"
 description = "Semantic Versioning 2.0.0 agent skill and version checker"
 authors = [{ name = "Ben Chatelain", email = "ben@octop.ad" }]
 requires-python = ">=3.9"
