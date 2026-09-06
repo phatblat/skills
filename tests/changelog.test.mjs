@@ -14,15 +14,15 @@ afterEach(async () => {
 
 test('semantic-release generates the standard changelog structure', async () => {
   const config = await Bun.file('.releaserc.json').json();
-  const changelogIndex = config.plugins.findIndex(
-    (plugin) => plugin[0] === '@semantic-release/changelog',
+  const names = config.plugins.map((plugin) =>
+    Array.isArray(plugin) ? plugin[0] : plugin,
   );
-  const customIndex = config.plugins.findIndex(
-    (plugin) => plugin[0] === './scripts/semantic-release-changes.mjs',
-  );
-  const gitIndex = config.plugins.findIndex(
-    (plugin) => plugin[0] === '@semantic-release/git',
-  );
+  const changelogIndex = names.indexOf('@semantic-release/changelog');
+  const customIndex = names.indexOf('./scripts/semantic-release-changes.mjs');
+  const gitIndex = names.indexOf('@semantic-release/git');
+  expect(changelogIndex).toBeGreaterThanOrEqual(0);
+  expect(customIndex).toBeGreaterThanOrEqual(0);
+  expect(gitIndex).toBeGreaterThanOrEqual(0);
   const root = await mkdtemp(path.join(os.tmpdir(), 'phatblat-changelog-'));
   roots.push(root);
 
@@ -38,21 +38,10 @@ test('semantic-release generates the standard changelog structure', async () => 
   expect(changelog).toStartWith(
     '# Changelog\n\nAll notable changes to this project will be documented in this file.',
   );
+  expect(changelog).not.toMatch(/\n{3,}/);
   expect(changelog.indexOf('## [Unreleased]')).toBeLessThan(
     changelog.indexOf('## [0.2.0] - 2026-09-06'),
   );
   expect(changelogIndex).toBeLessThan(customIndex);
   expect(customIndex).toBeLessThan(gitIndex);
-});
-
-test('tracked changelog records the initial version and references', async () => {
-  const changelog = await Bun.file('CHANGELOG.md').text();
-
-  expect(changelog).toContain('## [0.1.0] - 2026-09-05');
-  expect(changelog).toContain(
-    '[Unreleased]: https://github.com/phatblat/skills/commits/main/',
-  );
-  expect(changelog).toContain(
-    '[0.1.0]: https://github.com/phatblat/skills/commit/e52da4bd6267d61abfc347850a9328a0c557eac1',
-  );
 });

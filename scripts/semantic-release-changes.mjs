@@ -61,7 +61,11 @@ async function updateChangelogLinks(root, repositoryUrl, version) {
   const releaseVersions = body
     .map((line) => line.match(/^## \[([^\]]+)\] - \d{4}-\d{2}-\d{2}$/)?.[1])
     .filter(Boolean);
-  const previousVersion = releaseVersions[releaseVersions.indexOf(version) + 1];
+  const releaseIndex = releaseVersions.indexOf(version);
+  if (releaseIndex < 0) {
+    throw new Error(`missing changelog heading for ${version}`);
+  }
+  const previousVersion = releaseVersions[releaseIndex + 1];
   const previousUrl = existingDefinitions.get(previousVersion);
   const previousCommit = previousUrl?.match(/\/commit\/([^/?#]+)$/)?.[1];
   const baseUrl = repositoryUrl.replace(/(?:\.git)?\/$/, '');
@@ -84,9 +88,9 @@ async function updateChangelogLinks(root, repositoryUrl, version) {
  * comparison links, and delete consumed fragments. It must run after
  * `@semantic-release/changelog` and before `@semantic-release/git`.
  */
-export async function prepare({ repositoryUrl }, { cwd, nextRelease }) {
+export async function prepare(_pluginConfig, { cwd, nextRelease, options }) {
   await syncVersions({ root: cwd, version: nextRelease.version });
-  await updateChangelogLinks(cwd, repositoryUrl, nextRelease.version);
+  await updateChangelogLinks(cwd, options.repositoryUrl, nextRelease.version);
   const files = await fragmentFiles(cwd);
   await Promise.all(files.map((file) => rm(file)));
 }

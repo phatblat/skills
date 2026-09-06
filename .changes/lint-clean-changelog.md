@@ -1,0 +1,1 @@
+- Fixed: generated changelogs no longer carry a blank-line run that fails markdownlint, and release preparation stops instead of guessing when the changelog has no heading for the version being released.

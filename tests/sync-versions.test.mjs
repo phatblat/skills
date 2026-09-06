@@ -65,13 +65,18 @@ async function readJson(file) {
   return JSON.parse(await readFile(file, 'utf8'));
 }
 
+function releaseContext(root) {
+  return {
+    cwd: root,
+    nextRelease: { version: '0.2.0' },
+    options: { repositoryUrl: 'https://github.com/phatblat/skills' },
+  };
+}
+
 test('release preparation synchronizes every package version', async () => {
   const root = await makeReleaseFixture();
 
-  await prepare(
-    { repositoryUrl: 'https://github.com/phatblat/skills' },
-    { cwd: root, nextRelease: { version: '0.2.0' } },
-  );
+  await prepare({}, releaseContext(root));
 
   expect((await readJson(path.join(root, 'package.json'))).version).toBe(
     '0.2.0',
@@ -100,10 +105,7 @@ test('release notes use versioned Keep a Changelog headings', async () => {
   const root = await makeReleaseFixture();
   const today = new Date().toISOString().slice(0, 10);
 
-  const notes = await generateNotes(
-    {},
-    { cwd: root, nextRelease: { version: '0.2.0' } },
-  );
+  const notes = await generateNotes({}, releaseContext(root));
 
   expect(notes).toBe(
     `## [0.2.0] - ${today}\n\n### Fixed\n\n- synchronized versions.`,
@@ -113,10 +115,7 @@ test('release notes use versioned Keep a Changelog headings', async () => {
 test('release preparation updates changelog comparison links', async () => {
   const root = await makeReleaseFixture();
 
-  await prepare(
-    { repositoryUrl: 'https://github.com/phatblat/skills' },
-    { cwd: root, nextRelease: { version: '0.2.0' } },
-  );
+  await prepare({}, releaseContext(root));
 
   const changelog = await readFile(path.join(root, 'CHANGELOG.md'), 'utf8');
   expect(changelog).toContain(
@@ -127,5 +126,19 @@ test('release preparation updates changelog comparison links', async () => {
   );
   expect(changelog).toContain(
     '[0.1.0]: https://github.com/phatblat/skills/commit/abc123',
+  );
+});
+
+test('release preparation rejects a missing version heading', async () => {
+  const root = await makeReleaseFixture();
+  const changelogPath = path.join(root, 'CHANGELOG.md');
+  const changelog = await readFile(changelogPath, 'utf8');
+  await writeFile(
+    changelogPath,
+    changelog.replace('## [0.2.0] - 2026-09-06', '## Missing release heading'),
+  );
+
+  await expect(prepare({}, releaseContext(root))).rejects.toThrow(
+    'missing changelog heading for 0.2.0',
   );
 });
