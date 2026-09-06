@@ -19,18 +19,39 @@ function requireString(value, field, errors) {
   }
 }
 
+// Path-valued component fields. `hooks` and `mcpServers` also accept inline
+// definitions, so only their string forms name a path.
+const PATH_FIELDS = ['skills', 'commands', 'agents'];
+const PATH_OR_INLINE_FIELDS = ['hooks', 'mcpServers'];
+
 async function requireComponentPath(root, value, field, errors) {
   requireString(value, field, errors);
-  if (typeof value !== 'string' || !value.startsWith('./')) return;
+  if (typeof value !== 'string' || value.length === 0) return;
 
   const resolved = path.resolve(root, value);
   const relative = path.relative(root, resolved);
-  if (relative.startsWith('..') || path.isAbsolute(relative)) {
-    errors.push(`${field} must stay inside the plugin root`);
+  if (
+    relative === '' ||
+    relative.startsWith('..') ||
+    path.isAbsolute(relative)
+  ) {
+    errors.push(`${field} must stay inside the plugin root: ${value}`);
     return;
   }
   if (!(await stat(resolved).catch(() => null))) {
     errors.push(`${field} does not exist: ${value}`);
+  }
+}
+
+async function requireComponentPaths(root, file, plugin, errors) {
+  for (const field of [...PATH_FIELDS, ...PATH_OR_INLINE_FIELDS]) {
+    const value = plugin[field];
+    if (value === undefined) continue;
+    const inlineAllowed = PATH_OR_INLINE_FIELDS.includes(field);
+    for (const entry of Array.isArray(value) ? value : [value]) {
+      if (inlineAllowed && typeof entry !== 'string') continue;
+      await requireComponentPath(root, entry, `${file} ${field}`, errors);
+    }
   }
 }
 
@@ -115,6 +136,7 @@ export async function validatePlugins(root = process.cwd()) {
         `${file} version must equal package.json version ${pkg.version}`,
       );
     }
+    await requireComponentPaths(root, file, plugin, errors);
   }
 
   const pythonName = projectValue(pyproject, 'name', errors);
@@ -131,13 +153,6 @@ export async function validatePlugins(root = process.cwd()) {
       `uv.lock version must equal package.json version ${pkg.version}`,
     );
   }
-
-  await requireComponentPath(
-    root,
-    codex.skills,
-    '.codex-plugin/plugin.json skills',
-    errors,
-  );
 
   const claudeEntry = claudeMarketplace.plugins?.find(
     (plugin) => plugin.name === claude.name,

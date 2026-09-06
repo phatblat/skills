@@ -127,3 +127,37 @@ test('rejects implicit Codex marketplace policy', async () => {
   expect(result.exitCode).toBe(1);
   expect(result.stderr.toString()).toContain('policy.installation');
 });
+
+test('rejects a component path that does not exist', async () => {
+  const root = await makePluginFixture();
+  await writeJson(root, '.codex-plugin/plugin.json', {
+    name: 'example',
+    version: '0.1.0',
+    description: 'Example plugin',
+    skills: 'skills/missing/',
+  });
+
+  const result = validate(root);
+
+  expect(result.exitCode).toBe(1);
+  expect(result.stderr.toString()).toContain(
+    '.codex-plugin/plugin.json skills does not exist: skills/missing/',
+  );
+});
+
+test('rejects a Claude component path outside the plugin root', async () => {
+  const root = await makePluginFixture();
+  await writeJson(root, '.claude-plugin/plugin.json', {
+    name: 'example',
+    version: '0.1.0',
+    description: 'Example plugin',
+    commands: ['./commands/', '../elsewhere/commands/'],
+  });
+
+  const result = validate(root);
+
+  expect(result.exitCode).toBe(1);
+  expect(result.stderr.toString()).toContain(
+    '.claude-plugin/plugin.json commands must stay inside the plugin root',
+  );
+});
