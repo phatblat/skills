@@ -119,10 +119,17 @@ pages, changesets, `.out-of-scope/` directory, and `agents/openai.yaml` are not
   `README.md` plus each `SKILL.md` is the whole audience here.
 - **Changesets plus a version-sync script.** Rejected. conventional-docs'
   practice is semantic-release plus `.changes/` fragments, and `plugin.json`
-  carries no version to keep in sync.
+  carries no version to keep in sync. Amended by
+  [0002](0002-synchronize-portable-plugin-packaging.md): both manifests now
+  carry a version, and `scripts/sync-versions.mjs` keeps them equal to
+  `package.json` during the release. The `.changes/` fragment practice stands.
 - **`agents/openai.yaml` per skill.** Rejected. It exists for Codex UI copy and
   MCP tool dependencies that these skills have neither of; the plugin's
-  `interface` block covers picker copy once.
+  `interface` block covers picker copy once. Amended by
+  [0002](0002-synchronize-portable-plugin-packaging.md) for one skill:
+  `setup-phatblat-skills` ships the file solely to carry
+  `policy.allow_implicit_invocation: false`, which has no `SKILL.md`
+  equivalent on Codex and ChatGPT. No other skill has one.
 - **A router skill that dispatches to the other three.** Rejected. A router that
   goes stale is worse than no router, and four skills fit in `README.md`.
 - **A skills.sh pack.** Rejected; see Consequences.

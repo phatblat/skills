@@ -8,7 +8,7 @@ decision-makers: [phatblat]
 
 ## Context and Problem Statement
 
-Decision 0001 established one flat Agent Skills collection distributed through Claude Code, Codex, and generic Agent Skills installation routes. The first packaged release exposed several cross-client gaps: version values drift between manifests, the SemVer checker examples assume the source repository layout, explicit-only invocation is not represented in every client that supports it, Codex marketplace policy is implicit, Cursor guidance predates native Agent Skills support, plugin manifests are not validated in CI, and the generated changelog does not follow the repository's own Keep a Changelog contract.
+Decision [0001](0001-consolidate-skill-repos.md) established one flat Agent Skills collection distributed through Claude Code, Codex, and generic Agent Skills installation routes. The first packaged release exposed several cross-client gaps: version values drift between manifests, the SemVer checker examples assume the source repository layout, explicit-only invocation is not represented in every client that supports it, Codex marketplace policy is implicit, Cursor guidance predates native Agent Skills support, plugin manifests are not validated in CI, and the generated changelog does not follow the repository's own Keep a Changelog contract.
 
 The repository needs one version authority and client-specific packaging metadata without forking the skill instructions into per-client variants. Unsupported invocation controls need an honest best-effort guard rather than a claim of enforceable parity.
 
@@ -42,7 +42,9 @@ Treat the latest release tag as authoritative and generate manifest versions dur
 
 Use `package.json` as the sole editable version authority, starting at `0.1.0`. Synchronize `pyproject.toml`, `.claude-plugin/plugin.json`, and `.codex-plugin/plugin.json` with a tested script; semantic-release calls that script with `nextRelease.version` and commits every synchronized file.
 
-Keep portable behavior in each `SKILL.md`, but ship client metadata where a client defines it. `setup-phatblat-skills` retains `disable-model-invocation: true` for clients that honor it and adds `agents/openai.yaml` with `policy.allow_implicit_invocation: false` for Codex and ChatGPT. Clients without invocation control receive a deliberately non-triggering description plus a first-step guard that exits unless the user explicitly requested setup. Documentation must distinguish enforced invocation control from this best-effort fallback.
+`0.1.0` is a claim about released history, so the release job establishes it as semantic-release's baseline: when the repository has no reachable tag, CI tags the commit that `CHANGELOG.md` records as `0.1.0` before running semantic-release. Without that tag semantic-release falls back to its `1.0.0` first release and silently declares a stable public API.
+
+Keep portable behavior in each `SKILL.md`, but ship client metadata where a client defines it. `setup-phatblat-skills` retains `disable-model-invocation: true` for clients that honor it and adds `agents/openai.yaml` with `policy.allow_implicit_invocation: false` for Codex and ChatGPT. This reverses 0001's rejection of per-skill `agents/openai.yaml` for this one skill and one key: the rejection assumed the file would only carry Codex picker copy and MCP dependencies, and invocation control has no `SKILL.md` equivalent on those clients. Clients without invocation control receive a deliberately non-triggering description plus a first-step guard that exits unless the user explicitly requested setup. Documentation must distinguish enforced invocation control from this best-effort fallback.
 
 Keep `semver.py` at `skills/semantic-versioning/scripts/semver.py`, which already packages it with the skill. Instructions resolve the executable from the directory containing the activated `SKILL.md`; they never assume the consuming repository contains a `skills/` tree.
 
@@ -55,4 +57,5 @@ Codex marketplace entries declare installation and authentication policies expli
 - Claude Code, Cursor, Grok, Pi, Oh My Pi, Codex, and ChatGPT receive native explicit-only invocation metadata where supported.
 - Claude.ai, OpenCode, Antigravity, Gemini CLI, and any other client without equivalent invocation control can only be guarded after selection; the repository does not claim otherwise.
 - The shared skill body and bundled resources remain single-source and portable; no per-client copy of `SKILL.md` is introduced.
+- The first automated release is `0.1.x` or `0.2.0`; reaching `1.0.0` becomes a deliberate breaking-change decision rather than an accident of tag absence.
 - Each identified defect lands as its own implementation commit, with focused tests or validation where behavior changes.
