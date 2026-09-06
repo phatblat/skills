@@ -45,14 +45,14 @@ clean-pycache:
 [group('configuration')]
 outdated:
     -mise outdated --local --bump
-    -bun outdated
+    -{{ mise }} bun outdated
     -{{ mise }} uv lock --upgrade --dry-run
 
 # Upgrade pinned tools and dependencies to their latest versions
 [group('configuration')]
 upgrade:
     mise upgrade --local --bump --yes
-    bun update --latest
+    {{ mise }} bun update --latest
     {{ mise }} uv lock --upgrade
     {{ mise }} uv sync
 
@@ -114,20 +114,22 @@ lint:
 # Validate release-note fragment format in .changes/
 [group('checks')]
 lint-changes:
-    bun scripts/validate-changes.mjs
+    {{ mise }} bun scripts/validate-changes.mjs
 
 # Validate Claude and Codex plugin manifests and marketplaces
 [group('checks')]
 lint-plugins:
-    bun scripts/validate-plugins.mjs
+    {{ mise }} bun scripts/validate-plugins.mjs
+
 # Validate SKILL.md frontmatter against the Agent Skills spec
 [group('checks')]
 lint-skills:
-    bun scripts/validate-skills.mjs
+    {{ mise }} bun scripts/validate-skills.mjs
 
 # Validate the portable skills against the Agent Skills reference validator.
-# setup-phatblat-skills is excluded: it carries Claude Code's
-# `disable-model-invocation`, which skills-ref rejects as an unknown field.
+# setup-phatblat-skills is excluded: it carries `disable-model-invocation`, the
+# invocation control read by Claude Code, Cursor, Grok, Pi, and Oh My Pi, which
+# skills-ref rejects as an unknown field.
 [group('checks')]
 lint-skills-ref:
     uvx --from skills-ref agentskills validate skills/authoring-skills
@@ -142,7 +144,8 @@ run *args:
 # Synchronize every package manifest with package.json's version
 [group('build')]
 sync-versions:
-    bun scripts/sync-versions.mjs
+    {{ mise }} bun scripts/sync-versions.mjs
+
 # Lint Python with ruff
 [group('checks')]
 lint-python:
@@ -166,7 +169,7 @@ commitlint from="" to="HEAD":
         base=$(git rev-list --max-parents=0 HEAD)
       fi
     fi
-    bun x commitlint --from "$base" --to {{ to }} --verbose
+    {{ mise }} bun x commitlint --from "$base" --to {{ to }} --verbose
 
 # Run every gate
 [group('checks')]
@@ -186,12 +189,12 @@ test-links:
     # skills.sh is skipped: the badge and the repo's directory page both
     # 404 until the CLI registers this repo with a real install (see the
     # publish step in README.md); a static link check can't observe that.
-    bun x linkinator "*.md" ".changes/*.md" --markdown --skip 'skills\.sh'
+    {{ mise }} bun x linkinator "*.md" ".changes/*.md" --markdown --skip 'skills\.sh'
 
 # Run the JavaScript test suite
 [group('tests')]
 test-js:
-    mise exec -- bun test tests/*.test.mjs
+    {{ mise }} bun test tests/*.test.mjs
 
 # Run the Python test suite
 [group('tests')]
