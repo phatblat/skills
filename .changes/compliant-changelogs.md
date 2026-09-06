@@ -1,0 +1,1 @@
+- Fixed: generated changelogs now include the standard preamble, dated version headings, and comparison links.

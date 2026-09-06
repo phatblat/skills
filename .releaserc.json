@@ -7,8 +7,18 @@
         "releaseRules": [{ "type": "docs", "release": "patch" }]
       }
     ],
-    "./scripts/semantic-release-changes.mjs",
-    "@semantic-release/changelog",
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogTitle": "# Changelog\n\nAll notable changes to this project will be documented in this file.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/2.0.0/),\nand this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\n## [Unreleased]\n"
+      }
+    ],
+    [
+      "./scripts/semantic-release-changes.mjs",
+      {
+        "repositoryUrl": "https://github.com/phatblat/skills"
+      }
+    ],
     "@semantic-release/github",
     [
       "@semantic-release/git",

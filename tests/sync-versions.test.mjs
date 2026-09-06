@@ -3,7 +3,10 @@ import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
-import { prepare } from '../scripts/semantic-release-changes.mjs';
+import {
+  generateNotes,
+  prepare,
+} from '../scripts/semantic-release-changes.mjs';
 
 const roots = [];
 
@@ -45,6 +48,10 @@ async function makeReleaseFixture() {
       path.join(root, '.changes/release.md'),
       '- Fixed: synchronized versions.\n',
     ),
+    writeFile(
+      path.join(root, 'CHANGELOG.md'),
+      '# Changelog\n\n## [Unreleased]\n\n## [0.2.0] - 2026-09-06\n\n### Fixed\n\n- synchronized versions.\n\n## [0.1.0] - 2026-09-05\n\n### Added\n\n- initial release.\n\n[Unreleased]: https://github.com/phatblat/skills/commits/main/\n[0.1.0]: https://github.com/phatblat/skills/commit/abc123\n',
+    ),
   ]);
 
   return root;
@@ -57,7 +64,10 @@ async function readJson(file) {
 test('release preparation synchronizes every package version', async () => {
   const root = await makeReleaseFixture();
 
-  await prepare({}, { cwd: root, nextRelease: { version: '0.2.0' } });
+  await prepare(
+    { repositoryUrl: 'https://github.com/phatblat/skills' },
+    { cwd: root, nextRelease: { version: '0.2.0' } },
+  );
 
   expect((await readJson(path.join(root, 'package.json'))).version).toBe(
     '0.2.0',
@@ -73,5 +83,39 @@ test('release preparation synchronizes every package version', async () => {
   );
   expect(await Bun.file(path.join(root, '.changes/release.md')).exists()).toBe(
     false,
+  );
+});
+
+test('release notes use versioned Keep a Changelog headings', async () => {
+  const root = await makeReleaseFixture();
+  const today = new Date().toISOString().slice(0, 10);
+
+  const notes = await generateNotes(
+    {},
+    { cwd: root, nextRelease: { version: '0.2.0' } },
+  );
+
+  expect(notes).toBe(
+    `## [0.2.0] - ${today}\n\n### Fixed\n\n- synchronized versions.`,
+  );
+});
+
+test('release preparation updates changelog comparison links', async () => {
+  const root = await makeReleaseFixture();
+
+  await prepare(
+    { repositoryUrl: 'https://github.com/phatblat/skills' },
+    { cwd: root, nextRelease: { version: '0.2.0' } },
+  );
+
+  const changelog = await readFile(path.join(root, 'CHANGELOG.md'), 'utf8');
+  expect(changelog).toContain(
+    '[Unreleased]: https://github.com/phatblat/skills/compare/v0.2.0...HEAD',
+  );
+  expect(changelog).toContain(
+    '[0.2.0]: https://github.com/phatblat/skills/compare/abc123...v0.2.0',
+  );
+  expect(changelog).toContain(
+    '[0.1.0]: https://github.com/phatblat/skills/commit/abc123',
   );
 });
