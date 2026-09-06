@@ -116,6 +116,10 @@ lint:
 lint-changes:
     bun scripts/validate-changes.mjs
 
+# Validate Claude and Codex plugin manifests and marketplaces
+[group('checks')]
+lint-plugins:
+    bun scripts/validate-plugins.mjs
 # Validate SKILL.md frontmatter against the Agent Skills spec
 [group('checks')]
 lint-skills:
@@ -166,7 +170,7 @@ commitlint from="" to="HEAD":
 
 # Run every gate
 [group('checks')]
-check: format-check lint lint-changes lint-skills lint-skills-ref lint-python typecheck test
+check: format-check lint lint-changes lint-plugins lint-skills lint-skills-ref lint-python typecheck test
 
 #
 # tests group recipes
