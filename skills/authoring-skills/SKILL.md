@@ -76,20 +76,20 @@ constraint, hyphen rules): `references/spec-fields.md`.
   the two -- an agent deciding whether to `read` or `run` a bundled file
   relies on which directory it's in.
 
-### 4. Handle the harnesses that don't speak `SKILL.md` at all
+### 4. Add adjacent instruction formats only for different behavior
 
-Some ecosystems predate or ignore the Agent Skills format:
+Every client in this repository's target set reads `SKILL.md`, including
+Cursor. Do not mirror a portable skill merely because a target also supports a
+different instruction format:
 
-- **`AGENTS.md`** -- plain prose, no frontmatter, always-loaded (not
-  triggered). If a target harness only reads `AGENTS.md`, the portable
-  `SKILL.md` is not sufficient by itself: summarize the load-bearing
-  instructions into the project's `AGENTS.md` too, and keep the two in sync
-  by hand or with a small script -- there is no standard that unifies them.
-- **Cursor `.mdc` rules** (`.cursor/rules/*.mdc`) -- required frontmatter is
-  different (`description`, `globs`, `alwaysApply`), and triggering is
-  glob/always-based rather than description-based. A `SKILL.md` does not
-  become a Cursor rule automatically; mirror the instructions into a `.mdc`
-  file if Cursor is a target.
+- **`AGENTS.md`** is plain prose, always loaded rather than triggered. Put
+  repository-wide facts there when they must be present for every task; do not
+  duplicate an on-demand skill into it.
+- **Cursor `.mdc` rules** (`.cursor/rules/*.mdc`) provide Cursor-specific
+  always-on or path-scoped behavior. Cursor discovers `SKILL.md` directly, so
+  targeting Cursor does not require a rule mirror. Create a separate `.mdc`
+  artifact only when the requested behavior specifically depends on Cursor
+  rule semantics such as `alwaysApply` or `globs`.
 
 Full comparison table: `references/compatibility-matrix.md`.
 
