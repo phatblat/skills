@@ -1,9 +1,12 @@
 # Cross-Harness Compatibility Matrix
 
-Claude Code, Claude.ai, Codex, Cursor, OpenCode, Antigravity, Grok, Pi and
-Oh My Pi all read `SKILL.md`, so one spec-compliant skill covers all of
-them. The columns below matter only when a target harness is outside that
-set.
+The target client set for a portable skill is Claude Code, Claude.ai, Codex and
+ChatGPT, Cursor, OpenCode, Antigravity, Grok, Pi and Oh My Pi. All of them read
+`SKILL.md`, so one spec-compliant skill covers the whole set, and so do the
+other `SKILL.md` clients at <https://agentskills.io/clients> (Gemini CLI,
+Windsurf, Cline, Roo Code, and more). The columns below matter only when a
+target harness is outside that set. Client extensions are a different story:
+each one below names the clients that honor it.
 
 What "a skill" means differs across ecosystems. This table is for deciding
 _which_ artifact(s) a portable capability needs to ship as.
@@ -48,11 +51,11 @@ _which_ artifact(s) a portable capability needs to ship as.
 Explicit-only invocation is a client extension, not part of the Agent Skills
 specification:
 
-| Clients                                      | Metadata                                                          | Fallback needed? |
-| -------------------------------------------- | ----------------------------------------------------------------- | ---------------- |
-| Claude Code, Cursor, Grok, Pi, Oh My Pi      | `disable-model-invocation: true`                                  | No               |
-| Codex and ChatGPT                            | `policy.allow_implicit_invocation: false` in `agents/openai.yaml` | No               |
-| Claude.ai, OpenCode, Antigravity, Gemini CLI | No equivalent control                                             | Yes              |
+| Clients                                                                    | Metadata                                                          | Fallback needed? |
+| -------------------------------------------------------------------------- | ----------------------------------------------------------------- | ---------------- |
+| Claude Code, Cursor, Grok, Pi, Oh My Pi                                    | `disable-model-invocation: true`                                  | No               |
+| Codex and ChatGPT                                                          | `policy.allow_implicit_invocation: false` in `agents/openai.yaml` | No               |
+| Every other client, including Claude.ai, OpenCode, Antigravity, Gemini CLI | No equivalent control                                             | Yes              |
 
 For an explicit-only skill, ship every supported metadata form from the same
 skill directory. On unsupported clients, make the description say that the

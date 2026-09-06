@@ -75,6 +75,10 @@ constraint, hyphen rules): `references/spec-fields.md`.
   under `references/` and `assets/` is read/used, never executed. Don't blur
   the two -- an agent deciding whether to `read` or `run` a bundled file
   relies on which directory it's in.
+- A client-metadata directory (Codex's `agents/openai.yaml`, for instance) is
+  outside those three conventions. Ship one only for a control the
+  specification cannot express, name the client it serves, and keep the
+  portable behavior in `SKILL.md`.
 
 ### 4. Add adjacent instruction formats only for different behavior
 

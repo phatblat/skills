@@ -1,0 +1,1 @@
+- Changed: skill documentation names one target client set and, from it, every client that enforces explicit-only invocation.

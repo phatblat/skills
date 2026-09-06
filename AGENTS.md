@@ -17,16 +17,21 @@
   a `.changes/<slug>.md` fragment in the same commit.
 - Skills live at `skills/<name>/SKILL.md` with `name` equal to the directory
   name, and stay spec-clean: `name`, `description`, `license`, and nothing else.
-  The single exception is `setup-phatblat-skills`'s `disable-model-invocation`
-  ([2026-09-05-consolidate-skill-repos](docs/decisions/2026-09-05-consolidate-skill-repos.md)).
+  The single exception is `setup-phatblat-skills`, which carries the two
+  client-defined invocation controls no spec field covers:
+  `disable-model-invocation` in its frontmatter and
+  `policy.allow_implicit_invocation: false` in a bundled `agents/openai.yaml`
+  ([0001](docs/decisions/0001-consolidate-skill-repos.md),
+  [0002](docs/decisions/0002-synchronize-portable-plugin-packaging.md)).
   Reach for `skills/authoring-skills/references/spec-fields.md` before adding
   any frontmatter key.
 - A skill name names the activity, not the artifact: `recording-changes`, not
   `changelog`. The user-invoked setup command is the exception and is named for
   what a human types.
-- Every skill must work unchanged on Claude Code, Claude.ai, Codex, Cursor,
-  OpenCode, Antigravity, Grok, Pi and Oh My Pi, all of which read `SKILL.md`
-  directly. A skill that cannot says so in `compatibility`.
+- The target client set is defined once, in
+  `skills/authoring-skills/references/compatibility-matrix.md`; every skill must
+  work unchanged on all of it, and a skill that cannot says so in
+  `compatibility`.
 - Neither plugin manifest lists individual skills: Claude Code always scans
   `skills/`, and Codex takes the one path `./skills/`. Adding a skill directory
   ships it; there is no membership list to keep in sync.

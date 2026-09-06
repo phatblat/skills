@@ -11,9 +11,10 @@ const ALLOWED_KEYS = new Set([
   'metadata',
   'allowed-tools',
 ]);
-// Claude Code reads this key to keep a skill user-invoked; every other harness
-// ignores it. The one deliberate deviation from the Agent Skills spec in this
-// repo (docs/decisions/2026-09-05-consolidate-skill-repos.md), so it is
+// Clients with invocation control — Claude Code, Cursor, Grok, Pi, Oh My Pi —
+// read this key to keep a skill user-invoked; the rest ignore it. The one
+// deliberate deviation from the Agent Skills spec in this repo
+// (docs/decisions/0001-consolidate-skill-repos.md, amended by 0002), so it is
 // allowed by name, not by loosening the unknown-key check.
 const HARNESS_KEYS = new Set(['disable-model-invocation']);
 

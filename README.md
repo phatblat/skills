@@ -4,8 +4,9 @@
 
 Agent skills for changelogs, semantic versioning, and authoring portable agent
 skills — packaged as a single [Agent Skills](https://agentskills.io) collection
-for use across Claude Code, Claude.ai, Codex, Cursor, OpenCode, Antigravity,
-Grok, Pi, and Oh My Pi.
+for use across Claude Code, Claude.ai, Codex and ChatGPT, Cursor, OpenCode,
+Antigravity, Grok, Pi, and Oh My Pi, plus every other client that reads
+`SKILL.md`.
 
 ## Skills
 
@@ -17,10 +18,10 @@ Grok, Pi, and Oh My Pi.
 | `setup-phatblat-skills` | Record a repository's changelog policy and versioning scheme in its `AGENTS.md`. | Explicit-only where supported |
 
 `setup-phatblat-skills` uses native explicit-only metadata for Claude Code,
-Cursor, Grok, Pi, Oh My Pi, Codex, and ChatGPT. Claude.ai, OpenCode,
-Antigravity, and Gemini CLI expose no equivalent control, so the skill uses a
-non-triggering description and stops before doing work unless the user named
-it. See the
+Cursor, Grok, Pi, Oh My Pi, Codex, and ChatGPT. Every other client, Claude.ai,
+OpenCode, Antigravity, and Gemini CLI among them, exposes no equivalent
+control, so the skill uses a non-triggering description and stops before doing
+work unless the user named it. See the
 [compatibility matrix](skills/authoring-skills/references/compatibility-matrix.md#explicit-only-invocation).
 
 ## Install
