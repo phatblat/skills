@@ -1,0 +1,1 @@
+- Fixed: the changelog records the `1.0.0` and `1.0.1` releases that shipped, instead of a `0.1.0` section that was never released.

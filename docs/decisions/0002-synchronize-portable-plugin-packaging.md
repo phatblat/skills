@@ -40,9 +40,9 @@ Treat the latest release tag as authoritative and generate manifest versions dur
 
 ## Decision Outcome
 
-Use `package.json` as the sole editable version authority, starting at `0.1.0`. Synchronize `pyproject.toml`, `.claude-plugin/plugin.json`, and `.codex-plugin/plugin.json` with a tested script; semantic-release calls that script with `nextRelease.version` and commits every synchronized file.
+Use `package.json` as the sole editable version authority. Synchronize `pyproject.toml`, `.claude-plugin/plugin.json`, and `.codex-plugin/plugin.json` with a tested script; semantic-release calls that script with `nextRelease.version` and commits every synchronized file. Only semantic-release edits the value: the version in `package.json` is whatever the newest release tag says, never a hand-picked number.
 
-`0.1.0` is a claim about released history, so the release job establishes it as semantic-release's baseline: when the repository has no reachable tag, CI tags the commit that `CHANGELOG.md` records as `0.1.0` before running semantic-release. Without that tag semantic-release falls back to its `1.0.0` first release and silently declares a stable public API.
+**Correction (2026-09-06).** This decision was written and accepted claiming a `0.1.0` starting version, and CI briefly carried a step that would have tagged a `0.1.0` baseline. Both were wrong: the repository had already published `v1.0.0` (2026-09-05) and `v1.0.1` from `main`, so released history starts at `1.0.0`. The error came from reading an unfetched local tag list rather than the remote release tags. The synthetic `0.1.0` values, the changelog section, and the baseline step are removed; semantic-release continues from the newest tag, as it already did.
 
 Keep portable behavior in each `SKILL.md`, but ship client metadata where a client defines it. `setup-phatblat-skills` retains `disable-model-invocation: true` for clients that honor it and adds `agents/openai.yaml` with `policy.allow_implicit_invocation: false` for Codex and ChatGPT. This reverses 0001's rejection of per-skill `agents/openai.yaml` for this one skill and one key: the rejection assumed the file would only carry Codex picker copy and MCP dependencies, and invocation control has no `SKILL.md` equivalent on those clients. Clients without invocation control receive a deliberately non-triggering description plus a first-step guard that exits unless the user explicitly requested setup. Documentation must distinguish enforced invocation control from this best-effort fallback.
 
@@ -57,5 +57,5 @@ Codex marketplace entries declare installation and authentication policies expli
 - Claude Code, Cursor, Grok, Pi, Oh My Pi, Codex, and ChatGPT receive native explicit-only invocation metadata where supported.
 - Claude.ai, OpenCode, Antigravity, Gemini CLI, and any other client without equivalent invocation control can only be guarded after selection; the repository does not claim otherwise.
 - The shared skill body and bundled resources remain single-source and portable; no per-client copy of `SKILL.md` is introduced.
-- The first automated release is `0.1.x` or `0.2.0`; reaching `1.0.0` becomes a deliberate breaking-change decision rather than an accident of tag absence.
+- Version numbers follow from the newest release tag; the repository never asserts a released version that has no tag.
 - Each identified defect lands as its own implementation commit, with focused tests or validation where behavior changes.
